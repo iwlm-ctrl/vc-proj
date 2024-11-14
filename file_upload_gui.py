@@ -28,9 +28,14 @@ class FileUploadApp:
             filetypes=[("PowerPoint files", "*.pptx")],
             title="Select a .pptx file"
         )
+        self.update_label()
+
+    def update_label(self):
+        """Update label text based on file selection."""
         if self.file_path:
             # Update label to show the selected file name
-            self.drop_label.config(text=f"File selected: {self.file_path.split('/')[-1]}")
+            filename = self.file_path.split('/')[-1]  # Extract the file name from the path
+            self.drop_label.config(text=f"File selected: {filename}")
         else:
             # Reset label if no file is selected
             self.drop_label.config(text="No file selected.")
