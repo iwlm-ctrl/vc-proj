@@ -27,7 +27,7 @@ def main():
             print(ppt_summary)  # Print the summary for debugging
 
             # Step 3: Send Summarised content in JSON format to Airtable
-            airtable_response = send_to_airtable(ppt_summary)
+            airtable_response = send_to_airtable(ppt_summary, file_path=path)
             print("Airtable Response:", airtable_response)
     else:
         print("No files were selected.")
