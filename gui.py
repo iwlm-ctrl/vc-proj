@@ -56,7 +56,7 @@ class FileUploadApp:
 def open_file_upload_gui():
     """Function to open the file upload GUI and return the selected file paths."""
     root = tk.Tk()  # Create the root window for the main GUI
-
+    
     # Now, open the main file upload GUI window
     app = FileUploadApp(root)
 
