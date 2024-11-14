@@ -1,61 +1,75 @@
-# combined_file_picker.py
-
 import tkinter as tk
-from tkinter import ttk, filedialog
-from tkinter.scrolledtext import ScrolledText
+from tkinter import filedialog, messagebox
 
-def process_files(file_paths):
-    """Process the list of file paths (for example, print them)."""
-    if not file_paths:
-        raise ValueError("No files were selected.")
-    # Return a success message
-    return file_paths
-
-class FilePickerApp:
+class FileUploadApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("File Picker")
-        self.root.geometry("600x350")  
-        self.root.resizable(False, False)
+        self.root.title("File Upload App")
+        self.root.geometry("400x300")
 
-        self.file_paths = []  # List to store file paths
+        # List variable to store multiple file paths
+        self.file_paths = []
 
-        # Label
-        self.label = tk.Label(root, text="Select Files", font=('Helvetica', 14, 'bold'))
-        self.label.pack(pady=10)
+        # Label to show file selection area
+        self.drop_label = tk.Label(root, text="Click 'Select Files' to choose .pptx files", relief="solid", width=40, height=10)
+        self.drop_label.pack(padx=20, pady=20)
 
-        # Select Files Button
-        self.select_button = ttk.Button(root, text="Select Files", command=self.select_files)
-        self.select_button.pack(pady=5)
+        # Button to open file dialog
+        self.select_button = tk.Button(root, text="Select Files", command=self.select_files)
+        self.select_button.pack(pady=10)
 
-        # ScrolledText widget to display file paths
-        self.file_list_text = ScrolledText(root, width=60, height=8, wrap=tk.WORD, font=('Courier', 10))
-        self.file_list_text.pack(pady=5)
-        self.file_list_text.config(state=tk.DISABLED)
-
-        # Submit Button
-        self.submit_button = ttk.Button(root, text="Submit", command=self.submit_files)
+        # Submit button to confirm file upload
+        self.submit_button = tk.Button(root, text="Submit", command=self.submit_files)
         self.submit_button.pack(pady=10)
 
     def select_files(self):
-        """Open file picker and allow multiple file selection"""
-        files = filedialog.askopenfilenames(title="Select Files", 
-                                            filetypes=(("All Files", "*.*"), ("Text Files", "*.txt"), ("CSV Files", "*.csv")))
+        """Open file dialog to select .pptx files (multi-select)."""
+        files = filedialog.askopenfilenames(
+            filetypes=[("PowerPoint files", "*.pptx")],
+            title="Select .pptx files"
+        )
         if files:
             self.file_paths = list(files)
-            self.file_list_text.config(state=tk.NORMAL)
-            self.file_list_text.delete(1.0, tk.END)
-            self.file_list_text.insert(tk.END, "\n".join(self.file_paths))
-            self.file_list_text.config(state=tk.DISABLED)
+        self.update_label()
+
+    def update_label(self):
+        """Update label text based on file selection."""
+        if self.file_paths:
+            # Display the selected file names in the label
+            filenames = "\n".join([f.split('/')[-1] for f in self.file_paths])  # Show file names only
+            self.drop_label.config(text=f"Files selected:\n{filenames}")
+        else:
+            # Reset label if no files are selected
+            self.drop_label.config(text="No files selected.")
 
     def submit_files(self):
-        """Submit the files for processing"""
+        """Submit the file paths when the user clicks the submit button."""
         if self.file_paths:
-            self.root.quit()  # Close the main loop when "Submit" is pressed
+            self.root.quit()  # Close the window after selecting the files
+        else:
+            messagebox.showwarning("No files", "Please select at least one .pptx file before submitting.")
 
-def run_file_picker():
-    """Initialize the GUI, run the app, and return the selected file paths."""
-    root = tk.Tk()
-    app = FilePickerApp(root)
+    def get_file_paths(self):
+        """Return the list of file paths once the files are uploaded."""
+        return self.file_paths
+
+def open_file_upload_gui():
+    """Function to open the file upload GUI and return the selected file paths."""
+    root = tk.Tk()  # Create the root window for the main GUI
+
+    # Now, open the main file upload GUI window
+    app = FileUploadApp(root)
+
+    # Start the Tkinter event loop and wait for the user to select and submit files
     root.mainloop()
-    return app.file_paths  # Return file paths after GUI is closed
+
+    # Return the selected file paths once the window is closed
+    return app.get_file_paths()
+
+# Example call to start the file upload process
+if __name__ == "__main__":
+    file_paths = open_file_upload_gui()
+    if file_paths:
+        print(f"Files selected: {file_paths}")
+    else:
+        print("No files selected.")

@@ -30,7 +30,7 @@ def summarise_content(message):
         response = openai.chat.completions.create(
             model="gpt-4o-mini",  # Use a valid chat model, such as gpt-3.5-turbo or gpt-4
             messages= [
-                {"role": "system", "content": "I want to take this text data and summarise it. I'm an investor looking to extract the most crucial information that I'll be later using to input to an opportunities tracker. I want 4 core datapoints: Name, Company Summary, Team Size, Requested investment. In your output please format each of these on a new line. E.g. Name: [name] NEW LINE Company Summary: [summary] etc. Thanks!"},
+                {"role": "system", "content": "I want to take this text data and summarise it. I'm an investor looking to extract the most crucial information that I'll be later using to input to an opportunities tracker. I want 4 core datapoints: Name, Company Summary, Team Size, Requested Investment. In your output please format each of these on a new line. E.g. Name: [name] NEW LINE Company Summary: [summary] etc. Thanks!"},
                 {"role": "user", "content": message}
             ],
         )
