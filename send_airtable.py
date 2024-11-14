@@ -1,3 +1,4 @@
+import os
 import requests
 import base64
 from tokens import airtable_base_id, airtable_pat, airtable_table_name
@@ -9,6 +10,7 @@ MAX_RETRIES = 5
 MAX_BACKOFF = 10  # Maximum backoff time in seconds
 MIME_TYPE = 'application/vnd.ms-powerpoint'  # MIME type for PowerPoint files
 FILENAME = "Deck"  # Placeholder for the file name
+MAX_FILE_SIZE_MB = 5  # 5MB limit for Airtable file uploads
 
 @retry(wait=wait_exponential(min=1, max=MAX_BACKOFF), stop=stop_after_attempt(MAX_RETRIES))
 def upload_file_to_airtable(record_id, file_path):
@@ -88,12 +90,18 @@ def send_to_airtable(data, file_path=None):
         print(f"Failed to create record. Status code: {response.status_code}")
         raise RetryError(f"Error creating record in Airtable: {response.status_code}")
 
-    # Step 2: Upload the file (if a file path is provided)
+    # Step 2: Check if the file is larger than the max size (5MB)
     if file_path:
-        file_url = upload_file_to_airtable(record_id, file_path)
+        file_size_mb = os.path.getsize(file_path) / (1024 * 1024)  # File size in MB
+        if file_size_mb > MAX_FILE_SIZE_MB:
+            print(f"File is larger than {MAX_FILE_SIZE_MB}MB. Skipping upload.")
+            # Proceed with the creation of the record, but skip file upload
+            return response.json()
+        else:
+            file_url = upload_file_to_airtable(record_id, file_path)
 
-        # Step 3: Update the record with the file URL in the 'Deck' field
-        return update_record_with_file(record_id, file_url)
+            # Step 3: Update the record with the file URL in the 'Deck' field
+            return update_record_with_file(record_id, file_url)
 
     return response.json()
 
