@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
-import time
 
 class FileUploadApp:
     def __init__(self, root):
@@ -47,33 +46,11 @@ class FileUploadApp:
         """Return the file path once the file is uploaded."""
         return self.file_path
 
-def show_splash_screen(root):
-    """Show the splash screen for 1 second."""
-    splash = tk.Tk()
-    splash.overrideredirect(True)  # Remove window borders
-    splash.geometry("400x300")  # Set size of the splash screen
-    
-    splash_label = tk.Label(splash, text="LizzyWizard", font=("Helvetica", 32, "bold"))
-    splash_label.pack(expand=True)
-
-    # Optionally, add an image to the splash screen
-    # splash_image = PhotoImage(file="splash_image.png")
-    # splash_label = tk.Label(splash, image=splash_image)
-    # splash_label.pack()
-
-    splash.after(1000, splash.destroy)  # Close after 1 second
-    splash.mainloop()
-
 def open_file_upload_gui():
     """Function to open the file upload GUI and return the selected file path."""
-    
-    # Show the splash screen before starting the main application
-    root_splash = tk.Tk()
-    root_splash.withdraw()  # Hide the root window for the splash screen
-    show_splash_screen(root_splash)
+    root = tk.Tk()  # Create the root window for the main GUI
 
     # Now, open the main file upload GUI window
-    root = tk.Tk()
     app = FileUploadApp(root)
 
     # Start the Tkinter event loop and wait for the user to select and submit a file
