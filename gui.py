@@ -1,35 +1,32 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
-import os
 
 class FileUploadApp:
     def __init__(self, root):
         self.root = root
         self.root.title("File Upload App")
         self.root.geometry("400x300")
-        self.root.resizable(False, False)  # Prevent resizing for faster rendering
 
         # List variable to store multiple file paths
         self.file_paths = []
 
         # Label to show file selection area
-        self.drop_label = tk.Label(root, text="Click 'Select Files' to choose .pptx files", width=40)
-        self.drop_label.pack(padx=10, pady=20)
+        self.drop_label = tk.Label(root, text="Click 'Select Files' to choose .pptx files", relief="solid", width=40, height=10)
+        self.drop_label.pack(padx=20, pady=20)
 
         # Button to open file dialog
         self.select_button = tk.Button(root, text="Select Files", command=self.select_files)
-        self.select_button.pack(pady=5)
+        self.select_button.pack(pady=10)
 
         # Submit button to confirm file upload
         self.submit_button = tk.Button(root, text="Submit", command=self.submit_files)
-        self.submit_button.pack(pady=5)
+        self.submit_button.pack(pady=10)
 
     def select_files(self):
         """Open file dialog to select .pptx files (multi-select)."""
         files = filedialog.askopenfilenames(
             filetypes=[("PowerPoint files", "*.pptx")],
-            title="Select .pptx files",
-            initialdir=os.getcwd()  # Start in current directory for faster access
+            title="Select .pptx files"
         )
         if files:
             self.file_paths = list(files)
@@ -38,9 +35,11 @@ class FileUploadApp:
     def update_label(self):
         """Update label text based on file selection."""
         if self.file_paths:
-            filenames = "\n".join(os.path.basename(f) for f in self.file_paths)  # Show file names only
+            # Display the selected file names in the label
+            filenames = "\n".join([f.split('/')[-1] for f in self.file_paths])  # Show file names only
             self.drop_label.config(text=f"Files selected:\n{filenames}")
         else:
+            # Reset label if no files are selected
             self.drop_label.config(text="No files selected.")
 
     def submit_files(self):
@@ -56,7 +55,13 @@ class FileUploadApp:
 
 def open_file_upload_gui():
     """Function to open the file upload GUI and return the selected file paths."""
-    root = tk.Tk()
+    root = tk.Tk()  # Create the root window for the main GUI
+
+    # Now, open the main file upload GUI window
     app = FileUploadApp(root)
+
+    # Start the Tkinter event loop and wait for the user to select and submit files
     root.mainloop()
+
+    # Return the selected file paths once the window is closed
     return app.get_file_paths()
