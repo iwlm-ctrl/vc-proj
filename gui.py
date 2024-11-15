@@ -65,11 +65,3 @@ def open_file_upload_gui():
 
     # Return the selected file paths once the window is closed
     return app.get_file_paths()
-
-# Example call to start the file upload process
-if __name__ == "__main__":
-    file_paths = open_file_upload_gui()
-    if file_paths:
-        print(f"Files selected: {file_paths}")
-    else:
-        print("No files selected.")

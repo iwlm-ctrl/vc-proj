@@ -1,4 +1,3 @@
-import json
 from pptx import Presentation
 
 def extract_ppt_text(ppt_path):
