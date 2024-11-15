@@ -1,5 +1,5 @@
 from openai import OpenAI
-from tokens import project_key, org_key, openai_key 
+from tokens import project_key, org_key, openai_key, user_fields
 
 # make a client
 openai = OpenAI(
@@ -27,10 +27,11 @@ def process_openai_response(response):
 #### try assistant
 def summarise_content(message):
         # Make a test request to OpenAI's chat model to confirm access
+        print("Using these user fields:\n",user_fields)
         response = openai.chat.completions.create(
             model="gpt-4o-mini",  
             messages= [
-                {"role": "system", "content": "I want to take this text data and summarise it. I'm an investor looking to extract the most crucial information that I'll be later using to input to an opportunities tracker. I want 4 core datapoints: Name, Company Summary, Team Size, Requested Investment. In your output please format each of these on a new line. E.g. Name: [name] NEW LINE Company Summary: [summary] etc. Thanks!"},
+                {"role": "system", "content": f"I want to take this text data and summarise it. I'm an investor looking to extract the most crucial information that I'll be later using to input to an opportunities tracker. I'm interested in these core datapoints: {user_fields}. Interpret the deck to create high-quality answers for each of the datapoints. In your output please print the datapoint field name as a key-value pair. Separate each datapoint with a new line. Thanks!"},
                 {"role": "user", "content": message}
             ],
         )
